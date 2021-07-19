@@ -10,3 +10,5 @@ before_install:
   - npx prettier --check "./**/*.js"
   - docker-compose up -d
   - docker-compose stop
+
+script:

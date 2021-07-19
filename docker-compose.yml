@@ -1,0 +1,37 @@
+version: "3"
+services:
+  travis-frontend:
+    build: ./frontend
+    image: travis-frontend
+    stdin_open: true
+    ports:
+      - "3000:80"
+    networks:
+      - travis-learning
+  travis-backend:
+    build: ./backend
+    image: travis-backend
+    ports:
+      - "8080:8080"
+    networks:
+      - travis-learning
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - DB_CONNECTION=mongodb://mongo:27017/test
+  mongo:
+    image: mongo:3.6.19-xenial
+    ports:
+      - "27017:27017"
+    networks:
+      - travis-learning
+    volumes:
+      - mongo-data:/data/db
+networks:
+  travis-learning:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local

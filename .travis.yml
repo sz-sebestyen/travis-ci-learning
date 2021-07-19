@@ -1,8 +1,11 @@
-language: minimal
+language: node_js
 
 services:
   - docker
 
 before_install:
+  - npx prettier --check "./**/*.js"
+
+install:
   - docker-compose up -d
   - docker-compose stop

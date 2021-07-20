@@ -16,11 +16,12 @@ install:
 
 script:
   - docker-compose up -d
-
-after_script:
-  - docker-compose stop
   - docker-compose ps
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker-compose push
+
+after_script:
+  - docker-compose stop
+  - docker-compose ps

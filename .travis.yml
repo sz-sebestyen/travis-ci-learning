@@ -6,18 +6,7 @@ services:
 node_js:
   - "14"
 
-before_install:
-  - node --version
-  - docker --version
-  - docker-compose --version
-
-install:
-  - docker-compose build
-  - docker-compose up -d
-  - docker-compose ps
-
 stages:
-  - compile
   - test
   - name: deploy
     if: branch = main
@@ -29,6 +18,15 @@ jobs:
       script: npx prettier --check "./**/*.js"
     - stage: deploy
       name: "push images to dockerhub"
+      before_install:
+        - node --version
+        - docker --version
+        - docker-compose --version
+
+      install:
+        - docker-compose build
+        - docker-compose up -d
+        - docker-compose ps
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker-compose push

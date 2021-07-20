@@ -9,8 +9,11 @@ node_js:
 srcipt:
   - npx prettier --check "./**/*.js"
 
+before_install:
+  - docker-compose build
+
 install:
-  - docker-compose up --build
+  - docker-compose up -d
 
 after_install:
   - docker-compose stop

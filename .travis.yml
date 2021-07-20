@@ -17,7 +17,9 @@ jobs:
     - stage: tests
       name: "prettier check"
       script: npx prettier --check "./**/*.js"
-      script: npm run test
+      script: 
+        - cd backend/
+        - npm run test
 
     - stage: deploy
       name: "build and deploy"

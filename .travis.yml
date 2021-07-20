@@ -11,30 +11,26 @@ stages:
   - name: deploy
     if: branch = master
 
+before_install:
+  - node --version
+  - docker --version
+  - docker-compose --version
+
 jobs:
   include:
     - stage: "test"
       name: "prettier check"
-
       script: npx prettier --check "./**/*.js"
-
+      install: skip
     - stage: deploy
       name: "push images to dockerhub"
-
-      before_install:
-        - node --version
-        - docker --version
-        - docker-compose --version
-
       install:
         - docker-compose build
         - docker-compose up -d
         - docker-compose ps
-
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker-compose push
-
       after_script:
         - docker-compose stop
         - docker-compose ps

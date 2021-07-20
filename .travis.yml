@@ -15,11 +15,15 @@ stages:
 jobs:
   include:
     - stage: tests
-      name: "prettier check"
-      script: npx prettier --check "./**/*.js"
+      name: "run tests"
+      script:
+        - npx prettier --check "./**/*.js"
+        - cd backend/
+        - npm install
+        - npm run test
 
-    - stage: start
-      name: "build and run images"
+    - stage: deploy
+      name: "build and deploy"
       before_install:
         - docker --version
         - docker-compose --version
@@ -28,14 +32,8 @@ jobs:
       script:
         - docker-compose up -d
         - docker-compose ps
-      after_script:
         - docker-compose stop
         - docker-compose ps
-
-    - stage: deploy
-      name: "push images to dockerhub"
-      install:
-        - docker-compose build
-      script:
+      after_success:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker-compose push

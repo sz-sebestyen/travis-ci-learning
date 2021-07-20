@@ -9,6 +9,7 @@ services:
     networks:
       - travis-learning
   travis-backend:
+    init: true
     build: ./backend
     image: travis-backend
     ports:

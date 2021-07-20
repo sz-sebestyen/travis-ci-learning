@@ -6,9 +6,14 @@ services:
 node_js:
   - "14"
 
+stages:
+  - tests
+  - start
+  - deploy
+
 jobs:
   include:
-    - stage: "tests"
+    - stage: tests
       name: "prettier check"
       script: npx prettier --check "./**/*.js"
 
@@ -25,12 +30,13 @@ jobs:
       after_script:
         - docker-compose stop
         - docker-compose ps
-
-deploy:
-  provider: script
-  script:
-    - docker-compose build
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker-compose push
-  on:
-    branch: main
+    - stage: deploy
+      name: "push images to dockerhub"
+      deploy:
+        provider: script
+        script:
+          - docker-compose build
+          - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          - docker-compose push
+        on:
+          branch: main

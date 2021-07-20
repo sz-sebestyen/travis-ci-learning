@@ -9,15 +9,18 @@ node_js:
 stages:
   - test
   - name: deploy
-    if: branch = main
+    if: branch = master
 
 jobs:
   include:
     - stage: "test"
       name: "prettier check"
+
       script: npx prettier --check "./**/*.js"
+
     - stage: deploy
       name: "push images to dockerhub"
+
       before_install:
         - node --version
         - docker --version
@@ -27,10 +30,11 @@ jobs:
         - docker-compose build
         - docker-compose up -d
         - docker-compose ps
+
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker-compose push
 
-after_script:
-  - docker-compose stop
-  - docker-compose ps
+      after_script:
+        - docker-compose stop
+        - docker-compose ps

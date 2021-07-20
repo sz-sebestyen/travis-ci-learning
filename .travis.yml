@@ -1,4 +1,4 @@
-language: node_js
+language: minimal
 
 services:
   - docker
@@ -15,6 +15,3 @@ install:
 
 after_install:
   - docker-compose stop
-
-script:
-  - ./configure && make

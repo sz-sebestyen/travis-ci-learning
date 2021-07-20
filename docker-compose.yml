@@ -2,7 +2,7 @@ version: "3"
 services:
   travis-frontend:
     build: ./frontend
-    image: travis-frontend
+    image: "${DOCKER_USERNAME}/travis-frontend"
     stdin_open: true
     ports:
       - "3000:80"
@@ -10,7 +10,7 @@ services:
       - travis-learning
   travis-backend:
     build: ./backend
-    image: travis-backend
+    image: "${DOCKER_USERNAME}/travis-backend"
     ports:
       - "8080:8080"
     networks:

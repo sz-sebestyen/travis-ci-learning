@@ -15,9 +15,9 @@ stages:
 jobs:
   include:
     - stage: tests
-      name: "prettier check"
-      script: npx prettier --check "./**/*.js"
-      script: 
+      name: "run tests"
+      script:
+        - npx prettier --check "./**/*.js"
         - cd backend/
         - npm install
         - npm run test

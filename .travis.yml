@@ -9,7 +9,8 @@ node_js:
 stages:
   - tests
   - start
-  - deploy
+  - name: deploy
+    if: branch = main
 
 jobs:
   include:
@@ -33,8 +34,6 @@ jobs:
 
     - stage: deploy
       name: "push images to dockerhub"
-      on:
-        branch: main
       install:
         - docker-compose build
       script:

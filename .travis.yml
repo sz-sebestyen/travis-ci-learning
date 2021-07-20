@@ -6,8 +6,15 @@ services:
 node_js:
   - "14"
 
+addons:
+  apt:
+    packages:
+      - docker-ce
+
 before_install:
   - npx prettier --check "./**/*.js"
+  - docker --version
+  - docker-compose --version
 
 install:
   - docker-compose build

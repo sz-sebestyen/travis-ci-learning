@@ -7,20 +7,31 @@ node_js:
   - "14"
 
 before_install:
-  - npx prettier --check "./**/*.js"
+  - node --version
   - docker --version
   - docker-compose --version
 
 install:
   - docker-compose build
-
-script:
   - docker-compose up -d
   - docker-compose ps
 
-after_success:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker-compose push
+stages:
+  - compile
+  - test
+  - name: deploy
+    if: branch = main
+
+jobs:
+  include:
+    - stage: "test"
+      name: "prettier check"
+      script: npx prettier --check "./**/*.js"
+    - stage: deploy
+      name: "push images to dockerhub"
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker-compose push
 
 after_script:
   - docker-compose stop
